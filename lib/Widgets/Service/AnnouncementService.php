@@ -1,4 +1,6 @@
-<?php
+<?php declare(strict_types=1);
+
+
 /**
  * Nextcloud - Announcement Widget for Dashboard
  *
@@ -6,6 +8,7 @@
  * later. See the COPYING file.
  *
  * @author Maxence Lange <maxence@artificial-owl.com>
+ * @copyright 2018, Maxence Lange <maxence@artificial-owl.com>
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -54,7 +57,7 @@ class AnnouncementService {
 	/**
 	 * @return array
 	 */
-	public function getLastAnnouncement() {
+	public function getLastAnnouncement(): array {
 
 		$rows = $this->announcementManager->getAnnouncements(1, 0);
 
@@ -62,7 +65,6 @@ class AnnouncementService {
 			return [];
 		}
 
-		\OC::$server->getLogger()->log(2, '>>> ' . json_encode($rows));
 		$row = array_shift($rows);
 
 		$displayName = $row['author'];

@@ -1,4 +1,6 @@
-<?php
+<?php declare(strict_types=1);
+
+
 /**
  * Nextcloud - Announcement Widget for Dashboard
  *
@@ -6,6 +8,7 @@
  * later. See the COPYING file.
  *
  * @author Maxence Lange <maxence@artificial-owl.com>
+ * @copyright 2018, Maxence Lange <maxence@artificial-owl.com>
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,27 +29,38 @@
 namespace OCA\AnnouncementCenter\Widgets;
 
 
+use OC\L10N\L10N;
 use OCA\AnnouncementCenter\AppInfo\Application;
 use OCA\AnnouncementCenter\Widgets\Service\AnnouncementService;
-use OCA\Dashboard\IDashboardWidget;
-use OCA\Dashboard\Model\WidgetRequest;
-use OCA\Dashboard\Model\WidgetSettings;
 use OCP\AppFramework\QueryException;
+use OCP\Dashboard\IDashboardWidget;
+use OCP\Dashboard\Model\IWidgetRequest;
+use OCP\Dashboard\Model\IWidgetSettings;
+use OCP\IL10N;
+use OCP\L10N\IFactory;
 
 class AnnouncementWidget implements IDashboardWidget {
 
 
 	const WIDGET_ID = 'announcement-center';
 
+	/** @var IL10N */
+	private $l10n;
+
 
 	/** @var AnnouncementService */
 	private $announcementService;
 
 
+	public function __construct(IFactory $factory) {
+		$this->l10n = $factory->get('announcementcenter');
+	}
+
+
 	/**
 	 * @return string
 	 */
-	public function getId() {
+	public function getId(): string {
 		return self::WIDGET_ID;
 	}
 
@@ -54,23 +68,23 @@ class AnnouncementWidget implements IDashboardWidget {
 	/**
 	 * @return string
 	 */
-	public function getName() {
-		return 'Announcement';
+	public function getName(): string {
+		return $this->l10n->t('Announcements');
 	}
 
 
 	/**
 	 * @return string
 	 */
-	public function getDescription() {
-		return 'Display last announcements';
+	public function getDescription(): string {
+		return $this->l10n->t('Display last announcements');
 	}
 
 
 	/**
 	 * @return array
 	 */
-	public function getTemplate() {
+	public function getTemplate(): array {
 		return [
 			'app'      => 'announcementcenter',
 			'icon'     => 'icon-announcement',
@@ -85,7 +99,7 @@ class AnnouncementWidget implements IDashboardWidget {
 	/**
 	 * @return array
 	 */
-	public function widgetSetup() {
+	public function widgetSetup(): array {
 		return [
 			'size' => [
 				'min'     => [
@@ -103,9 +117,9 @@ class AnnouncementWidget implements IDashboardWidget {
 
 
 	/**
-	 * @param WidgetSettings $settings
+	 * @param IWidgetSettings $settings
 	 */
-	public function loadWidget($settings) {
+	public function loadWidget(IWidgetSettings $settings) {
 		$app = new Application();
 
 		$container = $app->getContainer();
@@ -118,9 +132,9 @@ class AnnouncementWidget implements IDashboardWidget {
 
 
 	/**
-	 * @param WidgetRequest $request
+	 * @param IWidgetRequest $request
 	 */
-	public function requestWidget(WidgetRequest $request) {
+	public function requestWidget(IWidgetRequest $request) {
 		if ($request->getRequest() === 'getLastAnnouncement') {
 			$request->addResult(
 				'lastAnnouncement', $this->announcementService->getLastAnnouncement()
