@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace OCA\AnnouncementCenter\AppInfo;
 
 use OCA\AnnouncementCenter\Controller\PageController;
+use OCA\AnnouncementCenter\Controller\APIController;
 use OCA\AnnouncementCenter\Manager;
 use OCA\AnnouncementCenter\Model\AnnouncementDoesNotExistException;
 use OCA\AnnouncementCenter\Notification\Notifier;
@@ -37,7 +38,8 @@ class Application extends App {
 		parent::__construct('announcementcenter');
 		$container = $this->getContainer();
 
-		$container->registerAlias('PageController', PageController::class);
+        $container->registerAlias('PageController', PageController::class);
+        $container->registerAlias('APIController', APIController::class);
 	}
 
 	public function register() {
